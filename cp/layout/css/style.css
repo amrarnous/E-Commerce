@@ -1,0 +1,133 @@
+body {
+	background: #ecf0f1;
+}
+/*Bootstrap Propritys*/
+.form-group-lg .form-control {
+	position: relative;
+	border-radius: 0;
+}
+.asterisk {
+	position: absolute;
+	font-size: 30px;
+	color: #e74c3c;
+	right: 25px;
+	top: 8px;
+}
+/*End Bootstrap Propritys*/
+.login {
+	margin: 200px auto;
+	width: 400px;
+}
+.login i {
+	margin-bottom: 20px;
+	margin-left: 35%;
+	font-size: 100px;
+	color:#95a5a6;
+	text-shadow: 6px 4px 18px #95a5a6;
+}
+.login input {
+	background: #ecf0f1;
+	height: 40px;
+	margin-bottom: 10px;
+	color: #95a5a6;
+}
+.login .btn {
+	background: transparent;
+	border-color: #95a5a6;
+}
+.login .btn:hover {
+	background: #95a5a6;
+	border:none;
+}
+
+/* Dashboard Style */
+
+.navbar {
+	border-radius: 0;
+	margin-bottom: 0;
+}
+.navbar-inverse {
+    background-color: #ecf0f1;
+    border-color: transparent;
+}
+.navbar-inverse .navbar-brand {
+    color: #939292;
+    padding: 25px;
+}
+.navbar-inverse .navbar-brand:hover {
+	color: #534f4f;
+}
+.navbar-inverse .navbar-nav {
+	padding: 10px;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: #939292;
+}
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: #534f4f;
+}
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:focus,
+.navbar-inverse .navbar-nav > .open > a:hover {
+    background-color: transparent;
+    color:#939292;
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover {
+	color: #534f4f;
+}
+.navbar-nav > li > .dropdown-menu {
+	background-color: #bdc3c7;
+}
+.dropdown-menu > li > a {
+	color: #ecf0f1;	
+}
+.dropdown-menu > li > a:hover {
+    color: #534f4f;
+    background-color: #ecf0f1;
+}
+.navbar-inverse .navbar-toggle {
+    border-color: #42a5f5;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #bbdefb;
+}
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    border-color: #bbdefb;
+    background-color:#42a5f5;
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+	color: #e3f2fd;
+}
+/*
+	Error Login
+*/
+.error {
+	position: absolute;
+	top: 70%;
+	left: 39%;
+	color: red;
+}
+
+/* Edit Profile Style */
+
+div.col-md-offset-2 .btn {
+	background-color: transparent;
+	border-color: #95a5a6;
+	transition: 1s all;
+	color: #95a5a6;
+}
+div.col-md-offset-2 .btn:hover {
+	background-color: #95a5a6;
+	border-color: none;
+	color: #ecf0f1;
+}
+h1 {
+	margin: 40px 10px;
+}
+.profile-edit input {
+	background: #ecf0f1;
+	color: #534f4f;
+}
+.profile-edit input.btn {
+	border-radius: 0;
+}
