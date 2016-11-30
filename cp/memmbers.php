@@ -12,7 +12,7 @@ if (isset($_SESSION["Username"])){
 			echo "<a href='?action=Add'>Add</a>";
 
 		} elseif ($action == 'Add') { // Add New Memmbers ?>
-			<h1 class="text-center">Add Memmbers</h1>
+			<h1 class="text-center heading">Add Memmbers</h1>
 			<div class="container">
 			<form class="form-horizontal profile-edit" method="POST" action="?action=Insert">
 				<div class="form-group form-group-lg">
@@ -72,7 +72,7 @@ if (isset($_SESSION["Username"])){
 		if ($stmt->rowCount() > 0) {
 
 		 ?>
-			<h1 class="text-center">Edit Profile</h1>
+			<h1 class="text-center heading">Edit Profile</h1>
 			<div class="container">
 			<form class="form-horizontal profile-edit" method="POST" action="?action=update">
 				<input type="hidden" name="userID" value="<?php echo $userID; ?>">

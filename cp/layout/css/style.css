@@ -22,7 +22,7 @@ body {
 	margin-bottom: 20px;
 	margin-left: 35%;
 	font-size: 100px;
-	color:#95a5a6;
+	color: #95a5a6;
 	text-shadow: 6px 4px 18px #95a5a6;
 }
 .login input {
@@ -130,4 +130,7 @@ h1 {
 }
 .profile-edit input.btn {
 	border-radius: 0;
+}
+.heading {
+	color: #95a5a6;
 }
