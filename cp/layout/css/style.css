@@ -134,3 +134,27 @@ h1 {
 .heading {
 	color: #95a5a6;
 }
+/*Manage Page*/
+.main-table tr:first-child td {
+	background-color: #95a5a6;
+	color: #ecf0f1;
+	padding: 10px 0px;
+}
+a[href='?action=Add']  {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #95a5a6;;
+	color: #95a5a6;
+	background-color: transparent;
+}
+a[href='?action=Add'] i {
+	padding-right: 10px;
+}
+a[href='?action=Add']:hover,
+a[href='?action=Add']:focus,
+a[href='?action=Add']:active  {
+	background-color: #95a5a6;
+	color: #ecf0f1;
+	border: none;
+}
+/*End Manage Page*/

@@ -7,7 +7,7 @@ if (isset($_SESSION["Username"])){
 
 		include $templates . "footer.php";
 } else {
-	header("Locaion: index.php");
+	header("Location:index.php");
 	exit();
 }
 ?>

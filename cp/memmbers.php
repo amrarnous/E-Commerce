@@ -6,12 +6,45 @@ if (isset($_SESSION["Username"])){
 
 		$action = isset($_GET["action"]) ? $_GET["action"] : "manage";
 
-		if ($action == "manage") {
+		if ($action == "manage") { // Manage Memmbers Page 
 
-			echo "Hello World";
-			echo "<a href='?action=Add'>Add</a>";
+				$stmt = $con->prepare("SELECT * FROM shop.users WHERE groupID != 1");
+				$stmt->execute();
+				$rows = $stmt->fetchAll();
 
-		} elseif ($action == 'Add') { // Add New Memmbers ?>
+			?>
+			<h1 class="text-center heading">Manage Memmbers</h1>
+			<div class="container">
+				<div class="table-responsive">
+					<table class="main-table text-center table table-bordered">
+						<tr>
+							<td>ID</td>
+							<td>Username</td>
+							<td>Email</td>
+							<td>Fullname</td>
+							<td>Registerd Status</td>
+							<td>Control</td>
+						</tr>
+						<?php
+						foreach ($rows as $row) {
+							echo "<tr>"; 
+								echo "<td>" . $row["userID"] . "</td>";
+								echo "<td>" . $row["username"] . "</td>";
+								echo "<td>" . $row["email"] . "</td>";
+								echo "<td>" . $row["fullName"] . "</td>";
+								echo "<td></td>";
+								echo "<td>
+								<a class='btn btn-success' href='?action=Edit&id=" . $row["userID"] . "'>Edit</a>
+								<a class='btn btn-danger' href='?action=Edit&id'>Delet</a>								
+									</td>";
+							echo "</tr>"; 
+						}
+						?>
+					</table>
+				</div>
+			<a href='?action=Add' class="btn btn-info btn-block"><i class="fa fa-plus"></i>Add</a>
+			</div>
+		<?php } elseif ($action == 'Add') { // Add New Memmbers ?>
 			<h1 class="text-center heading">Add Memmbers</h1>
 			<div class="container">
 			<form class="form-horizontal profile-edit" method="POST" action="?action=Insert">
@@ -53,9 +86,55 @@ if (isset($_SESSION["Username"])){
 			</div>
 		<?php
 	} elseif ($action == "Insert") {
-		echo $_POST['username'] . $_POST['password'] . $_POST['fullName'] . $_POST['email'];
-	}
+		if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
+			echo "<h1 class='text-center'>Data Inserted</h1>";
+			echo "<div class='container'>";
+			// POST the Variables
+			$user = $_POST["username"];
+			$password = $_POST["password"];
+			$email = $_POST["email"];
+			$full_name = $_POST["fullName"];
+
+			## Password Trick
+			$hpass = sha1($password);
+
+			## Validate The Form
+
+			$form_errors = array();
+
+			if (empty($user)) {
+				$form_errors[] = "Username Can't Be Empty";
+			}
+			if (empty($password)) {
+				$form_errors[] = "Password Can't Be Empty";
+			}
+			if(empty($email)) {
+				$form_errors[] = "Email Can't Be Empty";
+			}
+			if(empty($full_name)) {
+				$form_errors[] = "Full Name Can't Be Empty";
+			}
+
+			foreach ($form_errors as $error) {
+				echo "<h5 class='alert alert-danger'>" . $error . "</h5>" . "<br>";
+			} if ($form_errors == FALSE) {
+				$stmt = $con->prepare("INSERT INTO 
+						shop.users(username,password, email, fullName) 
+						VALUES(:auser,:apass,:amail,:aname)
+					");
+				$stmt->execute(array(
+					"auser" => $user,
+					"apass" => $hpass,
+					"amail" => $email,
+					"aname" => $full_name
+				));
+		echo "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Updated :D </h3>";
+			}
+		} else {
+			header("Location:index.php");
+	}
+}
 		 elseif ($action == "Edit") { # Edit Page
 
 			// SHOW IF THE ID IS NUMERIC TO SHOW PAGE
