@@ -1,9 +1,8 @@
 <?php
 session_start();
-$page_name = "Memmbers";
+$page_title = "Memmbers";
 if (isset($_SESSION["Username"])){
 		include "init.php";
-
 		$action = isset($_GET["action"]) ? $_GET["action"] : "manage";
 
 		if ($action == "manage") { // Manage Memmbers Page 
@@ -11,8 +10,7 @@ if (isset($_SESSION["Username"])){
 				$stmt = $con->prepare("SELECT * FROM shop.users WHERE groupID != 1");
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
-
-			?>
+				?>
 			<h1 class="text-center heading">Manage Memmbers</h1>
 			<div class="container">
 				<div class="table-responsive">
@@ -32,10 +30,10 @@ if (isset($_SESSION["Username"])){
 								echo "<td>" . $row["username"] . "</td>";
 								echo "<td>" . $row["email"] . "</td>";
 								echo "<td>" . $row["fullName"] . "</td>";
-								echo "<td></td>";
+								echo "<td>" . $row["Date"] . "</td>";
 								echo "<td>
 								<a class='btn btn-success' href='?action=Edit&id=" . $row["userID"] . "'>Edit</a>
-								<a class='btn btn-danger' href='?action=Edit&id'>Delet</a>								
+								<a class='btn btn-danger confirm' href='?action=Delete&id=" . $row["userID"] . "'>Delete</a>								
 									</td>";
 							echo "</tr>"; 
 						}
@@ -86,6 +84,7 @@ if (isset($_SESSION["Username"])){
 			</div>
 		<?php
 	} elseif ($action == "Insert") {
+
 		if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
 			echo "<h1 class='text-center'>Data Inserted</h1>";
@@ -119,9 +118,18 @@ if (isset($_SESSION["Username"])){
 			foreach ($form_errors as $error) {
 				echo "<h5 class='alert alert-danger'>" . $error . "</h5>" . "<br>";
 			} if ($form_errors == FALSE) {
+
+				$check = check_Items("username", "shop.users", $user);
+
+				if ($check == 1){
+					$errorMsg = "<h4>Sorry, This Username is Exist</h4>";
+
+					redirect_page($errorMsg, 3, "Add Page", "memmbers.php?action=Add");
+				} else {
+
 				$stmt = $con->prepare("INSERT INTO 
-						shop.users(username,password, email, fullName) 
-						VALUES(:auser,:apass,:amail,:aname)
+						shop.users(username,password, email, fullName, Date) 
+						VALUES(:auser,:apass,:amail,:aname, now())
 					");
 				$stmt->execute(array(
 					"auser" => $user,
@@ -129,28 +137,29 @@ if (isset($_SESSION["Username"])){
 					"amail" => $email,
 					"aname" => $full_name
 				));
-		echo "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Updated :D </h3>";
+				$theMsg = "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Updated </h3>";
+				redirect_page($theMsg, 3, "Add Memmbers", "memmbers.php?action=Add");
+
+					}
 			}
 		} else {
-			header("Location:index.php");
+			$theMsg = "<div class='alert alert-danger'>You Can't Use This Page Directly</div>";
+				redirect_page($theMsg, 3, "Home Page", "index.php");
 	}
 }
 		 elseif ($action == "Edit") { # Edit Page
 
 			// SHOW IF THE ID IS NUMERIC TO SHOW PAGE
 
-		$userID = isset($_GET["id"]) && is_numeric($_GET["id"]) ? intval($_GET["id"]) : 0;
+				$userID = isset($_GET["id"]) && is_numeric($_GET["id"]) ? intval($_GET["id"]) : 0;
+					$stmt = $con -> prepare('SELECT * FROM shop.users WHERE userID = ? LIMIT 1');
+				$stmt->execute(array($userID));
+				$row = $stmt->fetch();
+				$count = $stmt->rowCount();
 
+				if ($count > 0) {
 
-
-			$stmt = $con -> prepare('SELECT * FROM shop.users WHERE userID = ? LIMIT 1');
-		$stmt->execute(array($userID));
-		$row = $stmt->fetch();
-		$count = $stmt->rowCount();
-
-		if ($stmt->rowCount() > 0) {
-
-		 ?>
+				 ?>
 			<h1 class="text-center heading">Edit Profile</h1>
 			<div class="container">
 			<form class="form-horizontal profile-edit" method="POST" action="?action=update">
@@ -195,7 +204,8 @@ if (isset($_SESSION["Username"])){
 			<?php
 
 		} else {
-			echo "Sorry There's No Such id !";
+			$theMsg = "<div class='alert alert-danger'>Sorry There's No Such id !</div>";
+			redirect_page($theMsg, 3, "To Manage Page", "memmbers.php");
 	}
 } elseif ($action == "update") {
 
@@ -240,12 +250,32 @@ if (isset($_SESSION["Username"])){
 			$stmt = $con->prepare('UPDATE shop.users SET username = ?, email = ?, fullName = ?, password = ? WHERE userID = ?');
 			$stmt->execute(array($user,$email,$full_name,$pass,$userid));
 
-			echo "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Updated :D </h3>";
+			$theMsg = "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Updated :D </h3>";
+			redirect_page($theMsg, 3, "Memmbers Page", "memmbers.php");
 		}
 }
 
+	} elseif ($action == "Delete"){
+		$userID = isset($_GET["id"]) && is_numeric($_GET["id"]) ? intval($_GET["id"]) : 0;
+
+			$check = check_Items("userID", "shop.users", $userID);
+
+		if ($check > 0) {
+			$stmt = $con->prepare("DELETE FROM shop.users WHERE userID = :xuserid");
+			$stmt->bindParam(":xuserid", $userID);
+			$stmt->execute();
+			echo "<h1 class='text-center'>Data Updated</h1>";
+			echo "<div class='container'>";
+			echo "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " Record Deleted :D </h3>";
+			echo "</div>";
+				header("refresh:1;url=memmbers.php");
+		} else {
+			$theMsg = "<div class='alert alert-danger'>Sorry There Is No Such ID !</div>";
+			redirect_page($theMsg, 3, "Memmbers", "memmbers.php");
+		}
 	} else {
-		echo "You Can't Use This Page Directly";
+		$theMsg = "You Can't Use This Page Directly";
+		redirect_page($theMsg, 6, "Home", "index.php");
 	}
 		echo "</div>";
 		include $templates . "footer.php";

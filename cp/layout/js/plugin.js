@@ -7,4 +7,7 @@ $(function () {
             $(this).after("<span class='asterisk'>*</span>");
         }
     });
+    $(".confirm").click(function (){
+    	return confirm("Are You Sure ?");
+    });
 });

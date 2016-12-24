@@ -10,7 +10,7 @@
 	$function  = "includes/function/";
 
 	include $lang . "en.php";
-	include $function . "get_title.php";
+	include $function . "functions.php";
 	include $templates . "header.php";
 	if (!isset($no_Navbar)) {include $templates . "navbar.php"; }
 ?>

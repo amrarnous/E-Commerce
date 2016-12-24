@@ -31,7 +31,7 @@
 		$row = $stmt->fetch();
 		$count = $stmt->rowCount();
 
-		// check if him is admin say hello 		
+		// check if he is admin to say hello 		
 	if ($count > 0) {
 		
 			$_SESSION["Username"] = $username;
