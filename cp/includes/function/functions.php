@@ -40,4 +40,57 @@
 
 		return $count;
 	}
+/*
+***	Count items in DataBase function v1.0						***
+***	function to check how many there's of type of this item 	***
+***	$item = the item you want to count 							***
+***	$table = the table you choose from 							***
+*/
+/*
+	function count_items($item, $table, $where = "") {
+
+		global $con;
+
+		$stmt = $con->prepare("SELECT COUNT($item) FROM $table $where");
+
+		$stmt->execute();
+
+		return $stmt->fetchColumn();
+	} 
+*/
+	/*
+***	Count items in DataBase function v2.0						***
+***	function to check how many there's of type of this item 	***
+***	$item = the item you want to count 							***
+***	$table = the table you choose from 							***
+***	$where = if U need to excpect something 					***
+	*/
+		function count_items($item, $table, $where = "") {
+
+		global $con;
+
+		$stmt = $con->prepare("SELECT COUNT($item) FROM $table $where");
+
+		$stmt->execute();
+
+		return $stmt->fetchColumn();
+	} 
+/*
+	*** Get Latest Items Function v1.0 
+	*** $select = the field to select
+	***	$table = the table you select from
+	*** $order = the DECS ordering
+	***	$limit = the limit items you want to get
+*/
+		function get_latest_items($select, $table, $order, $limit = 5) {
+			global $con;
+
+			$getStmt = $con->prepare("SELECT $select FROM $table ORDER BY $order DESC LIMIT $limit");
+
+			$getStmt->execute();
+
+			$rows = $getStmt->fetchAll();
+
+			return $rows;
+		}
 ?>

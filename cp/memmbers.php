@@ -6,8 +6,13 @@ if (isset($_SESSION["Username"])){
 		$action = isset($_GET["action"]) ? $_GET["action"] : "manage";
 
 		if ($action == "manage") { // Manage Memmbers Page 
+				$query = "";
+				if (isset($_GET["page"]) && $_GET["page"] == "pending"){
 
-				$stmt = $con->prepare("SELECT * FROM shop.users WHERE groupID != 1");
+					$query = "AND regStatus = 0";
+
+				}
+				$stmt = $con->prepare("SELECT * FROM shop.users WHERE groupID != 1 $query");
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
 				?>
@@ -33,8 +38,11 @@ if (isset($_SESSION["Username"])){
 								echo "<td>" . $row["Date"] . "</td>";
 								echo "<td>
 								<a class='btn btn-success' href='?action=Edit&id=" . $row["userID"] . "'>Edit</a>
-								<a class='btn btn-danger confirm' href='?action=Delete&id=" . $row["userID"] . "'>Delete</a>								
-									</td>";
+								<a class='btn btn-danger confirm' href='?action=Delete&id=" . $row["userID"] . "'>Delete</a>";
+								if ($row["regStatus"] == 0){
+									echo "<a class='btn btn-info active' href='?action=active&id=" . $row["userID"] . "'>Activate</a>";
+								}
+								echo "</td>";
 							echo "</tr>"; 
 						}
 						?>
@@ -128,8 +136,8 @@ if (isset($_SESSION["Username"])){
 				} else {
 
 				$stmt = $con->prepare("INSERT INTO 
-						shop.users(username,password, email, fullName, Date) 
-						VALUES(:auser,:apass,:amail,:aname, now())
+						shop.users(username,password, email, fullName, regStatus, Date) 
+						VALUES(:auser,:apass,:amail,:aname, 1 ,now())
 					");
 				$stmt->execute(array(
 					"auser" => $user,
@@ -273,7 +281,25 @@ if (isset($_SESSION["Username"])){
 			$theMsg = "<div class='alert alert-danger'>Sorry There Is No Such ID !</div>";
 			redirect_page($theMsg, 3, "Memmbers", "memmbers.php");
 		}
-	} else {
+	} elseif ($action == "active"){
+		$userID = isset($_GET["id"]) && is_numeric($_GET["id"]) ? intval($_GET["id"]) : 0;
+
+			$check = check_Items("userID", "shop.users", $userID);
+
+		if ($check > 0) {
+			$stmt = $con->prepare("UPDATE shop.users SET regStatus = 1 WHERE userID = ?");
+			$stmt->execute(array($userID));
+			echo "<h1 class='text-center'>Data Updated</h1>";
+			echo "<div class='container'>";
+			echo "<h3 class='alert alert-success'>" . "<span style='color:red;'>" . $stmt->rowCount() . "</span>" . " User Activated</h3>";
+			echo "</div>";
+				header("refresh:1;url=memmbers.php");
+		} else {
+			$theMsg = "<div class='alert alert-danger'>Sorry There Is No Such ID !</div>";
+			redirect_page($theMsg, 3, "Memmbers", "memmbers.php");
+		}
+	}
+	 else {
 		$theMsg = "You Can't Use This Page Directly";
 		redirect_page($theMsg, 6, "Home", "index.php");
 	}
